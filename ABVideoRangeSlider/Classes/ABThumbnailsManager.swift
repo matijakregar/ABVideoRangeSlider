@@ -36,7 +36,6 @@ class ABThumbnailsManager: NSObject {
                                          height: view.frame.size.height)
                 self.thumbnailViews.append(imageView)
                 
-                
                 view.addSubview(imageView)
                 UIView.animate(withDuration: 0.2, animations: {() -> Void in
                     imageView.alpha = 1.0
@@ -54,7 +53,7 @@ class ABThumbnailsManager: NSObject {
     
     func updateThumbnails(view: UIView, videoURL: URL, duration: Float64) -> [UIImageView]{
         
-        for view in self.thumbnailViews{
+        for view in self.thumbnailViews {
             DispatchQueue.main.async {
                 view.removeFromSuperview()
             }

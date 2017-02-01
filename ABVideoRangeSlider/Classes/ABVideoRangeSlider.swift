@@ -29,7 +29,7 @@ public class ABVideoRangeSlider: UIView {
 
     let thumbnailsManager   = ABThumbnailsManager()
     var duration: Float64   = 0.0
-    var videoURL            = URL(fileURLWithPath: "")
+    var videoURL: URL?
 
     var progressPercentage: CGFloat = 0         // Represented in percentage
     var startPercentage: CGFloat    = 0         // Represented in percentage
@@ -38,7 +38,7 @@ public class ABVideoRangeSlider: UIView {
     let topBorderHeight: CGFloat      = 5
     let bottomBorderHeight: CGFloat   = 5
 
-    let indicatorWidth: CGFloat = 20.0
+    let indicatorWidth: CGFloat = 17.0
 
     public var minSpace: Float = 1              // In Seconds
     public var maxSpace: Float = 0              // In Seconds
@@ -68,7 +68,6 @@ public class ABVideoRangeSlider: UIView {
         self.isUserInteractionEnabled = true
 
         // Setup Start Indicator
-
         let startDrag = UIPanGestureRecognizer(target:self,
                                                action: #selector(startDragged(recognizer:)))
 
@@ -208,14 +207,18 @@ public class ABVideoRangeSlider: UIView {
     }
 
     public func updateThumbnails(){
-        if !isUpdatingThumbnails{
+        guard let url = videoURL else {
+            return
+        }
+        
+        if !isUpdatingThumbnails {
             self.isUpdatingThumbnails = true
             let backgroundQueue = DispatchQueue(label: "com.app.queue",
                                                 qos: .background,
                                                 target: nil)
             backgroundQueue.async {
                 self.thumbnailsManager.updateThumbnails(view: self,
-                                                        videoURL: self.videoURL,
+                                                        videoURL: url,
                                                         duration: self.duration)
                 self.isUpdatingThumbnails = false
             }
@@ -462,9 +465,17 @@ public class ABVideoRangeSlider: UIView {
         let endPosition = positionFromValue(value: self.endPercentage)
         let progressPosition = positionFromValue(value: self.progressPercentage)
 
-        startIndicator.center = CGPoint(x: startPosition, y: startIndicator.center.y)
-        endIndicator.center = CGPoint(x: endPosition, y: endIndicator.center.y)
-        progressIndicator.center = CGPoint(x: progressPosition, y: progressIndicator.center.y)
+        let height = self.bounds.size.height + bottomBorderHeight + topBorderHeight
+        let midY = self.bounds.midY
+        startIndicator.bounds.size.height = height
+        startIndicator.center = CGPoint(x: startPosition, y: midY)
+        
+        endIndicator.bounds.size.height = height
+        endIndicator.center = CGPoint(x: endPosition, y: midY)
+        
+        progressIndicator.bounds.size.height = height
+        progressIndicator.center = CGPoint(x: progressPosition, y: midY)
+        
         draggableView.frame = CGRect(x: startIndicator.frame.origin.x + startIndicator.frame.size.width,
                                      y: 0,
                                      width: endIndicator.frame.origin.x - startIndicator.frame.origin.x - endIndicator.frame.size.width,

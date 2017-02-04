@@ -44,6 +44,9 @@ public class ABVideoRangeSlider: UIView {
     public var maxSpace: Float = 0              // In Seconds
 
     var isUpdatingThumbnails = false
+    
+    var rightOverlay = UIView()
+    var leftOverlay = UIView()
 
     public enum ABTimeViewPosition{
         case top
@@ -143,6 +146,17 @@ public class ABVideoRangeSlider: UIView {
         endTimeView = ABTimeView(size: CGSize(width: 60, height: 30), position: 1)
         endTimeView.layer.anchorPoint = CGPoint(x: 0.5, y: 0.5)
         self.addSubview(endTimeView)
+        
+        
+        rightOverlay.alpha = 0.8
+        rightOverlay.isOpaque = false
+        rightOverlay.backgroundColor = UIColor.white
+        insertSubview(rightOverlay, belowSubview: startIndicator)
+        
+        leftOverlay.alpha = 0.8
+        leftOverlay.isOpaque = false
+        leftOverlay.backgroundColor = UIColor.white
+        insertSubview(leftOverlay, belowSubview: endIndicator)
     }
 
     public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
@@ -495,6 +509,9 @@ public class ABVideoRangeSlider: UIView {
         // Update time view
         startTimeView.center = CGPoint(x: startIndicator.center.x, y: startTimeView.center.y)
         endTimeView.center = CGPoint(x: endIndicator.center.x, y: endTimeView.center.y)
+        
+        rightOverlay.frame = CGRect(x: 0, y: 0, width: startPosition, height: bounds.height)
+        leftOverlay.frame = CGRect(x: endPosition, y: 0, width: bounds.width - endPosition, height: bounds.height)
     }
 
 

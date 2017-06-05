@@ -15,8 +15,13 @@ class ABEndIndicator: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.isUserInteractionEnabled = true
-        
-        let bundle = Bundle(for: ABStartIndicator.self)
+
+        let podBundle = Bundle(for: self.classForCoder)
+        guard let bundleURL = podBundle
+            .url(forResource: "ABVideoRangeSlider", withExtension: "bundle") else {
+                fatalError("Could not load the bundle")
+        }
+        let bundle = Bundle(url: bundleURL)
         let image = UIImage(named: "EndIndicator", in: bundle, compatibleWith: nil)
         
         imageView.frame = self.bounds

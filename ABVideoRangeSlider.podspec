@@ -28,7 +28,7 @@ Pod::Spec.new do |s|
 
   s.ios.deployment_target = '8.0'
 
-  s.source_files = 'ABVideoRangeSlider/Classes/**/*', 'ABVideoRangeSlider/Assets/*'
+  s.source_files = 'ABVideoRangeSlider/Classes/**/*'
 
   s.resource_bundles = {
     'ABVideoRangeSlider' => ['ABVideoRangeSlider/Assets/*.png']
